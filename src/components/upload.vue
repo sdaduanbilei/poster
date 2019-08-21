@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { constants } from 'crypto';
 export default {
   data () {
     return {
@@ -111,6 +112,7 @@ export default {
     },
     previewImage (event) {
       var input = event.target;
+      console.log(event)
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = (e) => {

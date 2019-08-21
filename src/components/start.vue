@@ -26,32 +26,25 @@
           ></VueDragResize>
       </div>
 
-      <el-tooltip
-        class="item"
-        effect="dark"
-        content="Top Left 提示文字"
-        placement="top-start"
+      <VueDragResize
+        :isActive="isActive"
+        :w="200"
+        :h="200"
+        :x="width /2 - 100"
+        :y="300"
+        v-on:resizing="resizeTitle"
+        v-on:dragging="resizeTitle"
+        class="flex flex-justify-center"
       >
-        <VueDragResize
-          :isActive="isActive"
-          :w="200"
-          :h="200"
-          :x="width /2 - 100"
-          :y="300"
-          v-on:resizing="resizeTitle"
-          v-on:dragging="resizeTitle"
-          class="flex flex-justify-center"
+        <div
+          class="flex flex-justify-center flex-align-center title"
+          v-bind:style="titleStyle"
         >
-          <div
-            class="flex flex-justify-center flex-align-center title"
-            v-bind:style="titleStyle"
-          >
-            <label>
-              {{title}}
-            </label>
-          </div>
-        </VueDragResize>
-      </el-tooltip>
+          <label>
+            {{title}}
+          </label>
+        </div>
+      </VueDragResize>
     </div>
 
     <div class="flex flex-justify-center full-width">

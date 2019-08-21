@@ -45,7 +45,7 @@ export default {
       },
       list: [
         {
-          url: require('../assets/poster_bg/poster_bg_1.png'),
+          url: require('../assets/poster_bg/poster_bg_4.png'),
         },
         {
           url: require('../assets/poster_bg/poster_bg_2.png')
@@ -54,7 +54,7 @@ export default {
           url: require('../assets/poster_bg/poster_bg_3.png')
         },
         {
-          url: require('../assets/poster_bg/poster_bg_4.png')
+          url: require('../assets/poster_bg/poster_bg_1.png')
         }
       ],
       currentIndex: 0
