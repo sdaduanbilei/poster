@@ -5,9 +5,12 @@ import './assets/style/main.css'
 import App from './App.vue'
 import router from './router'
 import VueDragResize from 'vue-drag-resize'
+import 'vue2-toast/lib/toast.css'
+import Toast from 'vue2-toast'
 
 Vue.use(ElementUI)
 Vue.use(VueDragResize)
+Vue.use(Toast)
 
 new Vue({
   router,

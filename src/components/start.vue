@@ -26,25 +26,32 @@
           ></VueDragResize>
       </div>
 
-      <VueDragResize
-        :isActive="isActive"
-        :w="200"
-        :h="200"
-        :x="width /2 - 100"
-        :y="300"
-        v-on:resizing="resizeTitle"
-        v-on:dragging="resizeTitle"
-        class="flex flex-justify-center"
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="Top Left 提示文字"
+        placement="top-start"
       >
-        <div
-          class="flex flex-justify-center flex-align-center title"
-          v-bind:style="titleStyle"
+        <VueDragResize
+          :isActive="isActive"
+          :w="200"
+          :h="200"
+          :x="width /2 - 100"
+          :y="300"
+          v-on:resizing="resizeTitle"
+          v-on:dragging="resizeTitle"
+          class="flex flex-justify-center"
         >
-          <label>
-            {{title}}
-          </label>
-        </div>
-      </VueDragResize>
+          <div
+            class="flex flex-justify-center flex-align-center title"
+            v-bind:style="titleStyle"
+          >
+            <label>
+              {{title}}
+            </label>
+          </div>
+        </VueDragResize>
+      </el-tooltip>
     </div>
 
     <div class="flex flex-justify-center full-width">
@@ -54,10 +61,9 @@
         round
         @click="generatorImage"
       >
-        立即制作
+        {{buttonTips}}
       </el-button>
     </div>
-
     <el-dialog
       :visible.sync="isShow"
       :width="dialogWidth"
@@ -117,7 +123,8 @@ export default {
       rwidth: 0,
       rheight: 0,
       top: 0,
-      left: 0
+      left: 0,
+      buttonTips: '效果预览'
     }
   },
 
@@ -129,6 +136,7 @@ export default {
       height: document.documentElement.clientHeight + 'px',
       width: document.documentElement.clientWidth + "px",
     }
+    this.$toast.top('点击拖动位置和修改大小');
   },
 
   methods: {
@@ -136,6 +144,11 @@ export default {
       this.isShow = true;
     },
     generatorImage () {
+      if(this.isActive) {
+        this.buttonTips = "立即制作"
+        this.isActive = false
+        return
+      }
       this.isActive = false
       this.loading = true
       var canvas = document.createElement("canvas")
@@ -173,11 +186,11 @@ export default {
       }
     },
     resizeTitle (newRect) {
-      var min = Math.min(newRect.width, newRect.height)
+      var min = Math.min(newRect.width, newRect.height) / 7.12
       this.titleStyle = {
         width: newRect.width + "px",
-        height: newRect.height + "px"
-
+        height: newRect.height + "px",
+        fontSize: min + "px"
       }
     }
   },
