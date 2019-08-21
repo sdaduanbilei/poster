@@ -210,7 +210,6 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url("../assets/bg.jpg");
 }
 .header {
   width: 96px;
