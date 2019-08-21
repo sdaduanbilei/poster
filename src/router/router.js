@@ -25,6 +25,7 @@ const routes = [
   },
   {
     path: '/upload',
+    name: 'upload',
     component: load('upload'),
     meta: {
       title: '上传'

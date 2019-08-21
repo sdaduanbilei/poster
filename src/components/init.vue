@@ -1,14 +1,17 @@
 <template>
   <div>
     <div v-bind:style="previewStyle">
-      <el-carousel :height="(screenHeght-80) +'px'">
+      <el-carousel
+        :height="(screenHeght-80) +'px'"
+        @change="change"
+      >
         <el-carousel-item
           v-for="item in list"
           v-bind:style="previewStyle"
-          :key="item"
+          :key="item.url"
         >
           <img
-            :src="item"
+            :src="item.url"
             v-bind:style="previewStyle"
           />
         </el-carousel-item>
@@ -24,7 +27,7 @@
         type="primary"
         @click="goStart()"
       >
-        立即制作
+        使用模板
       </el-button>
     </div>
   </div>
@@ -40,19 +43,34 @@ export default {
         height: (document.documentElement.clientHeight - 80) + 'px',
         width: document.documentElement.clientWidth + "px"
       },
-      list: ['http://circlezine.com/wp-content/uploads/2017/12/201708091513528134.jpg',
-        'https://images.uiiiuiii.com/wp-content/uploads/2019/01/meiia-0112-3d-1.jpg',
-        'http://pic1.16xx8.com/allimg/180722/16xx8-79843-0.jpg']
+      list: [
+        {
+          url: require('../assets/poster_bg/poster_bg_1.png'),
+        },
+        {
+          url: require('../assets/poster_bg/poster_bg_2.png')
+        },
+        {
+          url: require('../assets/poster_bg/poster_bg_3.png')
+        },
+        {
+          url: require('../assets/poster_bg/poster_bg_4.png')
+        }
+      ],
+      currentIndex: 0
     }
   },
   methods: {
     goStart () {
       this.$router.push({
-        name: 'start',
+        name: 'upload',
         params: {
-          url: this.list[2]
+          url: this.list[this.currentIndex].url
         }
       })
+    },
+    change (index) {
+      this.currentIndex = index
     }
   },
   components: {

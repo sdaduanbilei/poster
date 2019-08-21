@@ -21,7 +21,7 @@
         >
           <img
             class="header"
-            src="../assets/default.jpg"
+            :src="coustomHead"
             v-bind:style="headerStyle"
           ></VueDragResize>
       </div>
@@ -120,21 +120,24 @@ export default {
       titles: ['承认自己的伟大，就是认同自己的愚疑。', '毁灭人只要一句话，培植一个人却要千句话，请你多口下留情。',
         '偶尔跟老板交心是必要的，但要有的放矢。', '做事做得好，干活干到老。',
         '上司是趋利动物，关键时候一定会出卖你。', '忍耐力较诸脑力，尤胜一筹。'],
-      rwidth: 0,
-      rheight: 0,
-      top: 0,
-      left: 0,
-      buttonTips: '效果预览'
+      buttonTips: '效果预览',
+      coustomHead: ''
     }
   },
 
   mounted () {
     var index = Math.floor(Math.random() * 6)
-    this.title = this.titles[index]
-    console.log(this.$route.params.url)
+    // this.title = this.titles[index]
+    console.log(this.$route.params)
+    this.coustomHead = this.$route.params.url
+    this.title = this.$route.params.label
     this.backgroundStyle = {
       height: document.documentElement.clientHeight + 'px',
       width: document.documentElement.clientWidth + "px",
+      background: 'url(' + this.$route.params.background + ')',
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundNoRepeat: 'no-repeat'
     }
     this.$toast.top('点击拖动位置和修改大小');
   },
@@ -144,7 +147,7 @@ export default {
       this.isShow = true;
     },
     generatorImage () {
-      if(this.isActive) {
+      if (this.isActive) {
         this.buttonTips = "立即制作"
         this.isActive = false
         return
@@ -175,10 +178,8 @@ export default {
       this.captureImage = canvas.toDataURL('image/png');
     },
     resize (newRect) {
-      this.rwidth = newRect.width;
-      this.rheight = newRect.height;
-      this.top = newRect.top;
-      this.left = newRect.left;
+      this.buttonTips = "效果预览"
+      this.isActive = true
       var min = Math.min(newRect.width, newRect.height)
       this.headerStyle = {
         height: min + "px",
@@ -186,6 +187,8 @@ export default {
       }
     },
     resizeTitle (newRect) {
+      this.buttonTips = "效果预览"
+      this.isActive = true
       var min = Math.min(newRect.width, newRect.height) / 7.12
       this.titleStyle = {
         width: newRect.width + "px",
