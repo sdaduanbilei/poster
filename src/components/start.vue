@@ -3,26 +3,55 @@
     <div
       class="content"
       ref="capture"
+      v-loading="loading"
+      element-loading-text="拼命制作中"
+      v-bind:style="backgroundStyle"
     >
+
       <div class="flex flex-justify-center">
-        <img
-          class="header"
-          src="../assets/default.jpg"
+        <VueDragResize
+          :isActive="isActive"
+          :w="96"
+          :h="96"
+          :x="width /2 - 48"
+          :y="100"
+          v-on:resizing="resize"
+          v-on:dragging="resize"
+          class="flex flex-justify-center flex-align-center"
         >
+          <img
+            class="header"
+            src="../assets/default.jpg"
+            v-bind:style="headerStyle"
+          ></VueDragResize>
       </div>
 
-      <div class="flex flex-justify-center title">
-        <label>
-          心灵毒鸡汤
-        </label>
-      </div>
+      <VueDragResize
+        :isActive="isActive"
+        :w="200"
+        :h="200"
+        :x="width /2 - 100"
+        :y="300"
+        v-on:resizing="resizeTitle"
+        v-on:dragging="resizeTitle"
+        class="flex flex-justify-center"
+      >
+        <div
+          class="flex flex-justify-center flex-align-center title"
+          v-bind:style="titleStyle"
+        >
+          <label>
+            {{title}}
+          </label>
+        </div>
+      </VueDragResize>
     </div>
 
-    <div class="footer flex flex-justify-center full-width">
+    <div class="flex flex-justify-center full-width">
       <el-button
+        class="f-button"
         type="primary"
         round
-        style="width:80%;"
         @click="generatorImage"
       >
         立即制作
@@ -31,7 +60,7 @@
 
     <el-dialog
       :visible.sync="isShow"
-      width="250px"
+      :width="dialogWidth"
       title="长按图片即可保存"
     >
       <div ref="addImage">
@@ -39,6 +68,7 @@
         <div class="full-width flex flex-justify-center">
           <img
             class="preview"
+            v-bind:style="previewStyle"
             :src="captureImage"
           />
         </div>
@@ -51,15 +81,53 @@
 <script>
 import html2canvas from 'html2canvas'
 import Canvas2Image from 'canvas2image';
+import VueDragResize from 'vue-drag-resize';
 
 export default {
   data () {
     return {
       isShow: false,
+      isActive: true,
       captureImage: '',
       captureCanvas: '',
-      width: 375,
-      height: 812
+      title: '',
+      loading: false,
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+      backgroundStyle: {
+        height: document.documentElement.clientHeight + 'px',
+        width: document.documentElement.clientWidth + "px",
+      },
+      previewStyle: {
+        height: (document.documentElement.clientHeight * 0.6) + 'px',
+        width: (document.documentElement.clientWidth * 0.6) + "px"
+      },
+      headerStyle: {
+        height: 96 + "px",
+        width: 96 + "px"
+      },
+      titleStyle: {
+        width: 200 + "px",
+        height: 200 + "px"
+      },
+      dialogWidth: (document.documentElement.clientWidth * 0.7) + 'px',
+      titles: ['承认自己的伟大，就是认同自己的愚疑。', '毁灭人只要一句话，培植一个人却要千句话，请你多口下留情。',
+        '偶尔跟老板交心是必要的，但要有的放矢。', '做事做得好，干活干到老。',
+        '上司是趋利动物，关键时候一定会出卖你。', '忍耐力较诸脑力，尤胜一筹。'],
+      rwidth: 0,
+      rheight: 0,
+      top: 0,
+      left: 0
+    }
+  },
+
+  mounted () {
+    var index = Math.floor(Math.random() * 6)
+    this.title = this.titles[index]
+    console.log(this.$route.params.url)
+    this.backgroundStyle = {
+      height: document.documentElement.clientHeight + 'px',
+      width: document.documentElement.clientWidth + "px",
     }
   },
 
@@ -68,6 +136,8 @@ export default {
       this.isShow = true;
     },
     generatorImage () {
+      this.isActive = false
+      this.loading = true
       var canvas = document.createElement("canvas")
       var scale = 2
       canvas.width = this.width * scale
@@ -86,22 +156,41 @@ export default {
       })
     },
     convertCanvasToImage (canvas) {
+      this.loading = false
       this.isShow = true
       this.captureCanvas = canvas
       this.captureImage = canvas.toDataURL('image/png');
+    },
+    resize (newRect) {
+      this.rwidth = newRect.width;
+      this.rheight = newRect.height;
+      this.top = newRect.top;
+      this.left = newRect.left;
+      var min = Math.min(newRect.width, newRect.height)
+      this.headerStyle = {
+        height: min + "px",
+        width: min + "px"
+      }
+    },
+    resizeTitle (newRect) {
+      var min = Math.min(newRect.width, newRect.height)
+      this.titleStyle = {
+        width: newRect.width + "px",
+        height: newRect.height + "px"
+
+      }
     }
   },
   components: {
     html2canvas,
-    Canvas2Image
+    Canvas2Image,
+    VueDragResize
   }
 }
 </script>
 
 <style lang="scss">
 .content {
-  height: 812px;
-  width: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -110,23 +199,16 @@ export default {
 .header {
   width: 96px;
   height: 96px;
-  border-radius: 48px;
+  border-radius: 50%;
   object-fit: cover;
-  margin-top: 42px;
 }
 .title {
   color: white;
   font-size: 28px;
-  margin-top: 156px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  padding-bottom: 32px;
+  width: 200px;
+  height: 200px;
 }
 .preview {
-  width: 225px;
-  height: 487.2px;
   object-fit: cover;
 }
 </style>

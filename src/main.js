@@ -3,11 +3,13 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style/main.css'
 import App from './App.vue'
-import VModal from 'vue-js-modal'
+import router from './router'
+import VueDragResize from 'vue-drag-resize'
 
 Vue.use(ElementUI)
-Vue.use(VModal)
+Vue.use(VueDragResize)
 
 new Vue({
+  router,
   render: h => h(App)
 }).$mount('#app')
